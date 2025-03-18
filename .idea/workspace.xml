@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39e6dc42-cac3-4c60-812f-1a51a6befa72" name="Changes" comment="util : updated pathes for each file">
+    <list default="true" id="39e6dc42-cac3-4c60-812f-1a51a6befa72" name="Changes" comment="feat : now voice over script will saved as .txt not .docx">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/video/downloaded_videos/ ⚔️Just playingTop1 on FFA Nomad Ladder NOMAD Aoe4 on Sale 2025-03-18 00_18.mp4" beforePathEscaped="$PROJECT_DIR$/video/downloaded_videos/🟢 🟣🟡⚔️Just playing🟣Top1 on FFA Nomad Ladder🟡 NOMAD🔥 Aoe4 on Sale 2025-03-18 00_18.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video/key_words/key_words_20250318_001733.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video/key_words/key_words_20250318_203227.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video/scripts/voice_over_20250318_001732.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video/scripts/voice_over_20250318_203226.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video/voice_over/voice_over_20250318_001909.mp3" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -284,7 +277,23 @@
       <option name="project" value="LOCAL" />
       <updated>1742326787289</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="feat : updated code to skip any live videos">
+      <option name="closed" value="true" />
+      <created>1742331563324</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1742331563324</updated>
+    </task>
+    <task id="LOCAL-00018" summary="feat : now voice over script will saved as .txt not .docx">
+      <option name="closed" value="true" />
+      <created>1742331665642</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1742331665642</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -301,6 +310,8 @@
     <MESSAGE value="feat : changed keyword function to save just keywords instead of sentences" />
     <MESSAGE value="bug : error fixed and the code is clean now until makeing new bugs xD" />
     <MESSAGE value="util : updated pathes for each file" />
-    <option name="LAST_COMMIT_MESSAGE" value="util : updated pathes for each file" />
+    <MESSAGE value="feat : updated code to skip any live videos" />
+    <MESSAGE value="feat : now voice over script will saved as .txt not .docx" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : now voice over script will saved as .txt not .docx" />
   </component>
 </project>

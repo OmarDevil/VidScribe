@@ -26,13 +26,11 @@ genai.configure(api_key=GENAI_API_KEY)
 # Define paths
 VIDEO_FOLDER = os.path.join("..", "video")  # Path to the video folder
 DOWNLOADED_VIDEOS_FOLDER = os.path.join(VIDEO_FOLDER, "downloaded_videos")
-KEYWORDS_FOLDER = os.path.join(VIDEO_FOLDER, "key_words")
 SCRIPTS_FOLDER = os.path.join(VIDEO_FOLDER, "scripts")
 VOICE_OVER_FOLDER = os.path.join(VIDEO_FOLDER, "voice_over")
 
 # Create folders if they don't exist
 os.makedirs(DOWNLOADED_VIDEOS_FOLDER, exist_ok=True)
-os.makedirs(KEYWORDS_FOLDER, exist_ok=True)
 os.makedirs(SCRIPTS_FOLDER, exist_ok=True)
 os.makedirs(VOICE_OVER_FOLDER, exist_ok=True)
 
@@ -70,37 +68,6 @@ def save_script_to_txt(text: str, filename: str) -> None:
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(text)
     print(f"✅ Voice Over Script saved as {file_path}")
-
-
-def extract_keywords(text: str) -> List[str]:
-    """
-    Extract keywords from the script using Gemini API.
-    """
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    prompt = (f"Extract the most important keywords from the following script and return them as a comma-separated "
-              f"list in English:\n\n{text}")
-    response = model.generate_content(prompt)
-    if response.text:
-        # Split the comma-separated keywords into a list
-        keywords = response.text.strip().split(",")
-        # Remove any leading/trailing whitespace from each keyword
-        keywords = [keyword.strip() for keyword in keywords]
-        return keywords
-    return []
-
-
-def save_keywords(keywords: List[str]) -> str:
-    """
-    Save the extracted keywords to a text file in the key_words folder.
-    """
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"key_words_{timestamp}.txt"
-    file_path = os.path.join(KEYWORDS_FOLDER, filename)
-    with open(file_path, "w", encoding="utf-8") as f:
-        for keyword in keywords:
-            f.write(keyword + "\n")
-    print(f"✅ Keywords saved in {file_path}")
-    return file_path
 
 
 def search_videos(query: str, max_retries: int = 3) -> List[Dict[str, Any]]:
@@ -237,7 +204,7 @@ def convert_text_to_speech(text: str, output_file: str) -> None:
 
 
 def main():
-    steps = 4  # Total number of main steps
+    steps = 3  # Total number of main steps
     print("\n🚀 Starting the process...\n")
 
     # Step 1: Get User Input Before Starting the Progress Bar
@@ -258,21 +225,13 @@ def main():
     save_script_to_txt(script_text, script_filename)
     progress_bar.update(1)
 
-    # Step 2: Extract Key Sentences
-    print("\n📑 Extracting Key Sentences...")
-    key_sentences = extract_keywords(script_text)
-    keywords_filename = save_keywords(key_sentences)
-    progress_bar.update(1)
-
-    # Step 3: Search and Download Videos
+    # Step 2: Search and Download Videos
     print("\n🎥 Searching and Downloading Videos...")
-    keywords = open(keywords_filename, "r", encoding="utf-8").read().splitlines()
-    for keyword in keywords:
-        print(f"🔍 Searching for: {keyword}")
-        videos = search_videos(keyword)
-        if not videos:
-            print("No short videos found.")
-            continue
+    print(f"🔍 Searching for: {topic}")
+    videos = search_videos(topic)
+    if not videos:
+        print("No short videos found.")
+    else:
         for video in videos:
             print(f"⬇ Downloading: {video['title']} ({video['duration']})")
             video_path = download_video(video)
@@ -285,7 +244,7 @@ def main():
                 print("✅ Video is clean.")
     progress_bar.update(1)
 
-    # Step 4: Convert Script to Speech
+    # Step 3: Convert Script to Speech
     print("\n🔊 Converting Script to Speech...")
     audio_filename = datetime.now().strftime("voice_over_%Y%m%d_%H%M%S.mp3")
     convert_text_to_speech(script_text, audio_filename)
