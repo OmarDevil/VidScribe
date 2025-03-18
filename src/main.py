@@ -135,12 +135,31 @@ def get_video_duration(duration_str: str) -> float:
     return float('inf')
 
 
-def download_video(video: Dict[str, Any], output_dir: str = DOWNLOADED_VIDEOS_FOLDER) -> str:
+def is_live_stream(video_url: str) -> bool:
+    """
+    Check if the video is a live stream.
+    """
+    ydl_opts = {
+        'quiet': True,
+        'extract_flat': True,
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(video_url, download=False)
+        return info.get('is_live', False)
+
+
+def download_video(video: Dict[str, Any], output_dir: str = DOWNLOADED_VIDEOS_FOLDER) -> Optional[str]:
     """
     Download the given video using yt-dlp without merging formats.
     """
     os.makedirs(output_dir, exist_ok=True)
     video_url = f"https://www.youtube.com{video['url_suffix']}"
+
+    # Check if the video is a live stream
+    if is_live_stream(video_url):
+        print(f"❌ Skipping live stream: {video['title']}")
+        return None
+
     ydl_opts = {
         'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
         'format': 'bestvideo[ext=mp4]',
@@ -260,6 +279,8 @@ def main():
         for video in videos:
             print(f"⬇ Downloading: {video['title']} ({video['duration']})")
             video_path = download_video(video)
+            if video_path is None:  # Skip if the video is a live stream
+                continue
             if detect_text_in_video(video_path) or detect_logo_in_video(video_path):
                 print("❌ Video contains text or logos, deleting...")
                 os.remove(video_path)

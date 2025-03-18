@@ -6,6 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="39e6dc42-cac3-4c60-812f-1a51a6befa72" name="Changes" comment="util : updated pathes for each file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/video/downloaded_videos/ ⚔️Just playingTop1 on FFA Nomad Ladder NOMAD Aoe4 on Sale 2025-03-18 00_18.mp4" beforePathEscaped="$PROJECT_DIR$/video/downloaded_videos/🟢 🟣🟡⚔️Just playing🟣Top1 on FFA Nomad Ladder🟡 NOMAD🔥 Aoe4 on Sale 2025-03-18 00_18.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/video/key_words/key_words_20250318_001733.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/video/key_words/key_words_20250318_203227.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/video/scripts/voice_over_20250318_001732.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/video/scripts/voice_over_20250318_203226.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/video/voice_over/voice_over_20250318_001909.mp3" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,17 +45,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.KeyWords.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.sciprttool.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/omar/PycharmProjects/VidScribe0.1/src/downloaded_videos&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.KeyWords.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.sciprttool.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/omar/PycharmProjects/VidScribe0.1/src/downloaded_videos",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\omar\PycharmProjects\VidScribe0.1\src\downloaded_videos" />
@@ -269,7 +276,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742250124063</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="util : updated pathes for each file">
+      <option name="closed" value="true" />
+      <created>1742326787289</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1742326787289</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
