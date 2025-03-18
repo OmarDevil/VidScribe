@@ -1,10 +1,8 @@
 import time
 from typing import List, Optional, Dict, Any
-from docx import Document
 from datetime import datetime
 import requests
 import os
-import glob
 import json
 import cv2
 import pytesseract
@@ -64,14 +62,13 @@ def generate_voice_over_script(topic: str, lang: str = "en") -> str:
     return text
 
 
-def save_script_to_docx(text: str, filename: str) -> None:
+def save_script_to_txt(text: str, filename: str) -> None:
     """
-    Save the generated script to a Word document in the scripts folder.
+    Save the generated script to a text file in the scripts folder.
     """
-    doc = Document()
-    doc.add_paragraph(text)
     file_path = os.path.join(SCRIPTS_FOLDER, filename)
-    doc.save(file_path)
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(text)
     print(f"✅ Voice Over Script saved as {file_path}")
 
 
@@ -257,8 +254,8 @@ def main():
     # Step 1: Generate Voice Over Script
     print("\n✍️ Generating Voice Over Script...")
     script_text = generate_voice_over_script(topic)
-    script_filename = datetime.now().strftime("voice_over_%Y%m%d_%H%M%S.docx")
-    save_script_to_docx(script_text, script_filename)
+    script_filename = datetime.now().strftime("voice_over_%Y%m%d_%H%M%S.txt")
+    save_script_to_txt(script_text, script_filename)
     progress_bar.update(1)
 
     # Step 2: Extract Key Sentences
