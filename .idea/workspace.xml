@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39e6dc42-cac3-4c60-812f-1a51a6befa72" name="Changes" comment="bug : error fixed and the code is clean now until makeing new bugs xD">
+    <list default="true" id="39e6dc42-cac3-4c60-812f-1a51a6befa72" name="Changes" comment="util : updated pathes for each file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/downloaded_videos/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/key_words/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scripts/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voice_over/.gitignore" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -266,7 +261,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742178419730</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="util : updated pathes for each file">
+      <option name="closed" value="true" />
+      <created>1742250124063</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1742250124063</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -282,6 +285,7 @@
     <MESSAGE value="bug : there is an error in code whoever works on code next try to fix it please and report me on whatsapp if U fix it or not" />
     <MESSAGE value="feat : changed keyword function to save just keywords instead of sentences" />
     <MESSAGE value="bug : error fixed and the code is clean now until makeing new bugs xD" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug : error fixed and the code is clean now until makeing new bugs xD" />
+    <MESSAGE value="util : updated pathes for each file" />
+    <option name="LAST_COMMIT_MESSAGE" value="util : updated pathes for each file" />
   </component>
 </project>
