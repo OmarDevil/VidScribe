@@ -1,19 +1,17 @@
-import time
 from typing import List, Optional, Dict, Any
+from docx import Document
 from datetime import datetime
 import requests
 import os
-import json
 import cv2
 import pytesseract
-import torch
-from youtube_search import YoutubeSearch
 import yt_dlp
 from ultralytics import YOLO
-from deep_translator import GoogleTranslator
 import google.generativeai as genai
-from gtts import gTTS
 from tqdm import tqdm
+import json
+import time
+from youtube_search import YoutubeSearch
 
 # Constants
 GENAI_API_KEY = "AIzaSyAJexsERXMnXxVd7w5zBiHqy2TiXwU8Gis"
@@ -26,11 +24,13 @@ genai.configure(api_key=GENAI_API_KEY)
 # Define paths
 VIDEO_FOLDER = os.path.join("..", "video")  # Path to the video folder
 DOWNLOADED_VIDEOS_FOLDER = os.path.join(VIDEO_FOLDER, "downloaded_videos")
+KEYWORDS_FOLDER = os.path.join(VIDEO_FOLDER, "key_words")
 SCRIPTS_FOLDER = os.path.join(VIDEO_FOLDER, "scripts")
 VOICE_OVER_FOLDER = os.path.join(VIDEO_FOLDER, "voice_over")
 
 # Create folders if they don't exist
 os.makedirs(DOWNLOADED_VIDEOS_FOLDER, exist_ok=True)
+os.makedirs(KEYWORDS_FOLDER, exist_ok=True)
 os.makedirs(SCRIPTS_FOLDER, exist_ok=True)
 os.makedirs(VOICE_OVER_FOLDER, exist_ok=True)
 
@@ -60,6 +60,17 @@ def generate_voice_over_script(topic: str, lang: str = "en") -> str:
     return text
 
 
+def save_script_to_docx(text: str, filename: str) -> None:
+    """
+    Save the generated script to a Word document in the scripts folder.
+    """
+    doc = Document()
+    doc.add_paragraph(text)
+    file_path = os.path.join(SCRIPTS_FOLDER, filename)
+    doc.save(file_path)
+    print(f"✅ Voice Over Script saved as {file_path}")
+
+
 def save_script_to_txt(text: str, filename: str) -> None:
     """
     Save the generated script to a text file in the scripts folder.
@@ -70,19 +81,81 @@ def save_script_to_txt(text: str, filename: str) -> None:
     print(f"✅ Voice Over Script saved as {file_path}")
 
 
-def search_videos(query: str, max_retries: int = 3) -> List[Dict[str, Any]]:
+def extract_keywords(text: str, main_topic: str) -> List[str]:
     """
-    Search YouTube for videos matching the query with retry mechanism.
+    Extract important keywords from the script and ensure each keyword contains the main topic only once.
+    """
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    prompt = (f"Extract the most important keywords from the following script and return them as a comma-separated "
+              f"list in English. Ensure each keyword includes '{main_topic}' only once:\n\n{text}")
+
+    response = model.generate_content(prompt)
+    if response.text:
+        # تقسيم النص إلى قائمة كلمات مفتاحية
+        keywords = response.text.strip().split(",")
+
+        # تنظيف الكلمات من المسافات الزائدة
+        cleaned_keywords = [kw.strip() for kw in keywords]
+
+        # التأكد من عدم تكرار main_topic مرتين داخل أي كلمة مفتاحية
+        final_keywords = []
+        for kw in cleaned_keywords:
+            if main_topic.lower() in kw.lower():
+                # إزالة التكرار لو وجد
+                kw = kw.replace(main_topic, "").strip()
+                kw = f"{main_topic} {kw}".strip()  # ضمان وجود الكلمة المفتاحية الأساسية في البداية
+            else:
+                kw = f"{main_topic} {kw}".strip()  # لو مش موجودة، نضيفها بطريقة طبيعية
+
+            final_keywords.append(kw)
+
+        return final_keywords
+
+    return []
+
+
+def save_keywords(keywords: List[str]) -> str:
+    """
+    Save the extracted keywords to a text file in the key_words folder.
+    """
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"key_words_{timestamp}.txt"
+    file_path = os.path.join(KEYWORDS_FOLDER, filename)
+    with open(file_path, "w", encoding="utf-8") as f:
+        for keyword in keywords:
+            f.write(keyword + "\n")
+    print(f"✅ Keywords saved in {file_path}")
+    return file_path
+
+
+def search_videos(query: str, max_results=10, max_retries=3) -> List[Dict[str, Any]]:
+    """
+    Search YouTube for videos containing the query in their title.
     """
     for attempt in range(max_retries):
         try:
-            results = YoutubeSearch(query, max_results=10).to_json()
+            # البحث الأول باستخدام العنوان الكامل
+            results = YoutubeSearch(query, max_results=max_results).to_json()
             videos = json.loads(results).get("videos", [])
-            return [video for video in videos if get_video_duration(video['duration']) <= 60]
+
+            # لو مفيش نتائج، نبحث باستخدام الكلمة المفتاحية الأساسية فقط
+            if not videos:
+                print(f"⚠ No exact match found for '{query}', trying a broader search...")
+                keywords = query.split()  # تقسيم الكلمات المفتاحية
+                if len(keywords) > 1:  # لو فيه أكثر من كلمة
+                    broad_query = " ".join(keywords[:2])  # ناخد أول كلمتين
+                else:
+                    broad_query = keywords[0]
+
+                results = YoutubeSearch(broad_query, max_results=max_results).to_json()
+                videos = json.loads(results).get("videos", [])
+
+            return videos
         except Exception as e:
-            print(f"Attempt {attempt + 1} failed: {e}")
-            time.sleep(2)  # Wait before retrying
-    return []  # Return empty list if all attempts fail
+            print(f"❌ Attempt {attempt + 1} failed: {e}")
+            time.sleep(2)  # انتظار قبل إعادة المحاولة
+
+    return []  # إرجاع قائمة فارغة لو كل المحاولات فشلت
 
 
 def get_video_duration(duration_str: str) -> float:
@@ -204,7 +277,7 @@ def convert_text_to_speech(text: str, output_file: str) -> None:
 
 
 def main():
-    steps = 3  # Total number of main steps
+    steps = 4  # Total number of main steps
     print("\n🚀 Starting the process...\n")
 
     # Step 1: Get User Input Before Starting the Progress Bar
@@ -221,17 +294,25 @@ def main():
     # Step 1: Generate Voice Over Script
     print("\n✍️ Generating Voice Over Script...")
     script_text = generate_voice_over_script(topic)
-    script_filename = datetime.now().strftime("voice_over_%Y%m%d_%H%M%S.txt")
-    save_script_to_txt(script_text, script_filename)
+    script_filename = datetime.now().strftime("voice_over_%Y%m%d_%H%M%S.docx")
+    save_script_to_docx(script_text, script_filename)
     progress_bar.update(1)
 
-    # Step 2: Search and Download Videos
+    # Step 2: Extract Key Sentences
+    print("\n📑 Extracting Key Sentences...")
+    key_sentences = extract_keywords(script_text, topic)  # Pass the main topic to include it in keywords
+    keywords_filename = save_keywords(key_sentences)
+    progress_bar.update(1)
+
+    # Step 3: Search and Download Videos
     print("\n🎥 Searching and Downloading Videos...")
-    print(f"🔍 Searching for: {topic}")
-    videos = search_videos(topic)
-    if not videos:
-        print("No short videos found.")
-    else:
+    keywords = open(keywords_filename, "r", encoding="utf-8").read().splitlines()
+    for keyword in keywords:
+        print(f"🔍 Searching for videos with title containing: {keyword}")
+        videos = search_videos(keyword)  # Use the keyword as the title for search
+        if not videos:
+            print(f"No videos found with title containing: {keyword}")
+            continue
         for video in videos:
             print(f"⬇ Downloading: {video['title']} ({video['duration']})")
             video_path = download_video(video)
@@ -244,7 +325,7 @@ def main():
                 print("✅ Video is clean.")
     progress_bar.update(1)
 
-    # Step 3: Convert Script to Speech
+    # Step 4: Convert Script to Speech
     print("\n🔊 Converting Script to Speech...")
     audio_filename = datetime.now().strftime("voice_over_%Y%m%d_%H%M%S.mp3")
     convert_text_to_speech(script_text, audio_filename)
